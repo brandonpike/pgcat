@@ -5,6 +5,7 @@
 *.profraw
 cov/
 lcov.info
+Cargo.lock
 
 # Dev
 dev/.bash_history
