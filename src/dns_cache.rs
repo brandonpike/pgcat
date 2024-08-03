@@ -113,7 +113,7 @@ impl From<crate::config::Config> for CachedResolverConfig {
 
 impl CachedResolver {
     ///
-    /// Returns a new Arc<CachedResolver> based on passed configuration.
+    /// Returns a new `Arc<CachedResolver>` based on passed configuration.
     /// It also starts the loop that will refresh cache entries.
     ///
     /// # Arguments:

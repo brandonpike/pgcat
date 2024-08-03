@@ -400,15 +400,15 @@ impl Server {
                     debug!("Connecting to server using TLS");
 
                     let mut root_store = RootCertStore::empty();
-                    root_store.add_server_trust_anchors(
-                        webpki_roots::TLS_SERVER_ROOTS.0.iter().map(|ta| {
+                    root_store.add_trust_anchors(webpki_roots::TLS_SERVER_ROOTS.0.iter().map(
+                        |ta| {
                             OwnedTrustAnchor::from_subject_spki_name_constraints(
                                 ta.subject,
                                 ta.spki,
                                 ta.name_constraints,
                             )
-                        }),
-                    );
+                        },
+                    ));
 
                     let mut tls_config = rustls::ClientConfig::builder()
                         .with_safe_defaults()
@@ -1436,8 +1436,9 @@ async fn parse_query_message(message: &mut BytesMut) -> Result<Vec<String>, Erro
                 err.fields()
                     .iterator()
                     .fold(String::default(), |acc, element| acc
-                        + element.unwrap().value())
-            )))
+                        + std::str::from_utf8(element.unwrap().value_bytes())
+                            .expect("error field value contained non-UTF8 bytes"))
+            )));
         }
         Ok(_) => {
             return Err(Error::ProtocolSyncError(
